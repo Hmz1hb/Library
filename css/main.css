@@ -92,9 +92,9 @@ body{
 .collection-img span{
     top: 20px;
     right: 20px;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+    padding: 6px;
+    width: relative;
+    border-radius: 10%;
 }
 
 /* special */
