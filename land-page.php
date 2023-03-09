@@ -19,7 +19,7 @@
            // Check if the user is logged in
            if(isset($_SESSION['id'])) {
             // Redirect the user to the login page
-            header("Location:http://localhost/Library/index.php");
+            header("Location:http://localhost/Library/member.php");
             exit;
           }
   ?>
@@ -29,7 +29,7 @@
     <nav class = "navbar navbar-expand-lg navbar-light bg-white py-4 fixed-top">
         <div class = "container">
             <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "index.html">
-                <img src = "images/shopping-bag-icon.png" alt = "site icon">
+                <i class="fa fa-book" aria-hidden="true"></i>
                 <span class = "text-uppercase fw-lighter ms-2">TooRead</span>
             </a>
 
@@ -55,7 +55,7 @@
             <div class = "collapse navbar-collapse order-lg-1" id = "navMenu">
                 <ul class = "navbar-nav mx-auto text-center">
                     <li class = "nav-item px-2 py-2">
-                        <a class = "nav-link text-uppercase text-dark" href = "#header">home</a>
+                        <a class = "nav-link text-uppercase text-dark" href = "#offers">home</a>
                     </li>
                     <!-- <li class = "nav-item px-2 py-2">
                         <a class = "nav-link text-uppercase text-dark" href = "#collection">collection</a>
