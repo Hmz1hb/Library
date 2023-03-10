@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 
 
     <!-- custom css -->
@@ -290,31 +290,32 @@ $(document).ready(function() {
     data: {ouvre_id: ouvre_id, selected_date: selected_date},
     dataType: 'json',
     success: function(response) {
-      if (response.status === 'available') {
-        // If the selected date is available, proceed with the reservation
-        $('#modal-title-succ').text('Reservation successful!');
-        $('.suc-rep').html(response.message);
-        
-        // Generate the QR code using the ticket code
-        var qr = new QRious({
-          element: document.getElementById('qr-code'),
-          value: response.ticket_code,
-          size: 200,
-          backgroundAlpha: 0,
-          foregroundAlpha: 1,
-          level: 'H'
-        });
-        
-        $('#res-success').modal('show');
-        $('#res-success').on('hidden.bs.modal', function () {
-          location.reload();
-        });
-      } else {
-        // If the selected date is not available, show an error message
-        $('#reservationMessage').text(response.message);
-        $('#reservationModal').modal('show');
-      }
-    },
+  if (response.success) {
+    // If the selected date is available, proceed with the reservation
+    $('#modal-title-succ').text('Reservation successful!');
+    $('.suc-rep').html(response.message);
+    
+    // Remove leading zeros from ticket code and generate the QR code
+    var ticket_code = parseInt(response.ticket_code, 10).toString();
+    var qr = new QRious({
+      element: document.getElementById('qr-code'),
+      value: ticket_code,
+      size: 200,
+      backgroundAlpha: 0,
+      foregroundAlpha: 1,
+      level: 'H'
+    });
+    
+    $('#res-success').modal('show');
+    $('#res-success').on('hidden.bs.modal', function () {
+      location.reload();
+    });
+  } else {
+    // If the selected date is not available, show an error message
+    $('#reservationMessage').text(response.message);
+    $('#reservationModal').modal('show');
+  }
+},
     error: function(response) {
       console.log(response);
       $('#modal-title-fail').text('Reservation failed!');

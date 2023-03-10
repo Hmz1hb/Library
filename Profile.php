@@ -117,7 +117,7 @@
                         ?>
     <nav class = "navbar navbar-expand-lg navbar-light bg-white py-4 fixed-top mb-5">
         <div class = "container">
-            <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "index.html">
+            <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "land-page.php">
                 <i class="fa fa-book" aria-hidden="true"></i>
                 <span class = "text-uppercase fw-lighter ms-2">TooRead</span>
             </a>
@@ -172,7 +172,7 @@
 <section id = "collection">
 <div class="container-fluid mt-5">
   <div class="row">
-  <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <!-- <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3 sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
@@ -195,7 +195,7 @@
           </li>
         </ul>
       </div>
-    </nav>
+    </nav> -->
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -247,21 +247,76 @@
                                         }
                                       }
 
-                                      // Update the user's information in the database
-                                      $query = "UPDATE adhérent SET A_nom = :A_nom, A_adresse = :A_adresse, A_email = :A_email, A_phone = :A_phone WHERE A_id = :id";
-                                      $stmt = $conn->prepare($query);
-                                      $stmt->bindParam(':id', $_SESSION['id']);
-                                      $stmt->bindParam(':A_nom', $A_nom);
-                                      $stmt->bindParam(':A_adresse', $A_adresse);
-                                      $stmt->bindParam(':A_email', $A_email);
-                                      $stmt->bindParam(':A_phone', $A_phone);
+                                          // Update the user's information in the database
+                                         $query = "UPDATE adhérent SET A_nom = :A_nom, A_adresse = :A_adresse, A_email = :A_email, A_phone = :A_phone WHERE A_id = :id";
+                                         
+                                        //  $stmt = $conn->prepare($query);
+                                        //  $stmt->bindParam(':id', $_SESSION['id']);
+                                        //  $stmt->bindParam(':A_nom', isset($A_nom) ? $result['A_nom'] : $A_nom);
+                                        //  $stmt->bindParam(':A_adresse', isset($A_adresse) ? $result['A_adresse'] : $A_adresse);
+                                        //  $stmt->bindParam(':A_email', isset($A_email) ? $result['A_email'] : $A_email);
+                                        //  $stmt->bindParam(':A_phone', isset($A_phone) ? $result['A_phone'] : $A_phone);
 
-                                      if ($stmt->execute()) {
-                                        $profile_success_message = 'Your profile has been updated.';
-                                      } else {
-                                        $profile_error_message = 'Error updating profile.';
-                                      }
-                                    }
+                                          $AAA = empty($A_nom) ? $result['A_nom'] : $A_nom;
+                                          $BBB = empty($A_adresse) ? $result['A_adresse'] : $A_adresse;
+                                          $CCC = empty($A_email) ? $result['A_email'] : $A_email ;
+                                          $DDD = empty($A_phone) ? $result['A_phone'] : $A_phone ;
+                                          $stmt = $conn->prepare($query);
+                                          $stmt->bindParam(':id', $_SESSION['id']);
+                                          $stmt->bindParam(':A_nom', $AAA );
+                                          $stmt->bindParam(':A_adresse', $BBB );
+                                          $stmt->bindParam(':A_email', $CCC );
+                                          $stmt->bindParam(':A_phone', $DDD );
+
+                                           // Update the user's information in the database
+                                          //  $query = "UPDATE adhérent SET A_nom = :A_nom, A_adresse = :A_adresse, A_email = :A_email, A_phone = :A_phone WHERE A_id = :id";
+                                          //  $stmt = $conn->prepare($query);
+                                          //  $stmt->bindParam(':id', $_SESSION['id']);
+                                          //  $stmt->bindParam(':A_nom', $A_nom);
+                                          //  $stmt->bindParam(':A_adresse', $A_adresse);
+                                          //  $stmt->bindParam(':A_email', $A_email);
+                                          //  $stmt->bindParam(':A_phone', $A_phone);
+     
+                                           if ($stmt->execute()) {
+                                             $profile_success_message = 'Your profile has been updated.';
+                                           } else {
+                                             $profile_error_message = 'Error updating profile.';
+                                           }
+                                        }
+
+                                        // $query = "UPDATE adhérent SET ";
+                                        // $params = array();
+
+                                        // if (!empty($A_nom)) {
+                                        //   $query .= "A_nom = :A_nom, ";
+                                        //   $params[':A_nom'] = $A_nom;
+                                        // }
+
+                                        // if (!empty($A_adresse)) {
+                                        //   $query .= "A_adresse = :A_adresse, ";
+                                        //   $params[':A_adresse'] = $A_adresse;
+                                        // }
+
+                                        // if (!empty($A_email)) {
+                                        //   $query .= "A_email = :A_email, ";
+                                        //   $params[':A_email'] = $A_email;
+                                        // }
+
+                                        // if (!empty($A_phone)) {
+                                        //   $query .= "A_phone = :A_phone, ";
+                                        //   $params[':A_phone'] = $A_phone;
+                                        // }
+
+                                        // $query = rtrim($query, ', ') . " WHERE A_id = :id";
+                                        // $params[':id'] = $_SESSION['id'];
+
+                                        // $stmt = $conn->prepare($query);
+                                        // if ($stmt->execute($params)) {
+                                        //   $profile_success_message = 'Your profile has been updated.';
+                                        // } else {
+                                        //   $profile_error_message = 'Error updating profile.';
+                                        // }
+
 
                                     // Get the user's information from the database
                                     $query = "SELECT * FROM adhérent WHERE A_id = :id";
