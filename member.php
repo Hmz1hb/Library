@@ -77,6 +77,7 @@
             <?php echo $result['A_nom'];?>
           </a>
           <ul class="dropdown-menu text-small">
+            <li><a class="dropdown-item" href="./my reservation.php">My Reservations</a></li>
             <li><a class="dropdown-item" href="./my borrows.php">My Borrows</a></li>
             <li><a class="dropdown-item" href="./Profile.php">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
@@ -214,7 +215,6 @@
   </div>
 </div>
 <!-- reservation modal -->
-<!-- <a class="btn btn-primary mt-3 reserve-btn" data-bs-title="<?php echo $row['ouvre_id']; ?>">Reserve</a> -->
 
 <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
   <div class="modal-dialog">
