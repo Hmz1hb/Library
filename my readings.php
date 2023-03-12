@@ -206,8 +206,6 @@
                                 <p class="text-capitalize my-1"><?php echo $row['ouvre_titre']; ?></p>
                                 <span class="fw-bold"><?php echo $row['ouvre_auteur']; ?></span>
                                 <div class="text-center">
-                                <a class="btn btn-primary mt-3 Eticket-btn" data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-id="<?php echo $row['ouvre_id']; ?>" data-bs-title="<?php echo $row['ouvre_titre']; ?>">My E-ticket</a>
-
                                 <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-title="<?php echo $row['ouvre_titre']; ?>" data-bs-author="<?php echo $row['ouvre_auteur']; ?>" data-bs-image="<?php echo $imgSrc; ?>" data-bs-etat="<?php echo $row['ouvre_etat']; ?>" data-bs-type="<?php echo $row['ouvre_type']; ?>" data-bs-edition="<?php echo $row['ouvre_editionD']; ?>" data-bs-pages="<?php echo $row['ouvre_pages']; ?>">
                                 Details
                                 </button>
@@ -255,39 +253,8 @@
   </div>
 </div>
 
- <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reservationModalLabel">Reservation failed</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="reservationMessage"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- E-ticket Modal -->
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel3">E-ticket for <span class="book-title"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center">
-                    <canvas id="qr-code" class="mb-3"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
     </main>
@@ -295,42 +262,6 @@
 </div>
 
 <script>
-
-
-
-$(document).ready(function() {
-    $('.Eticket-btn').click(function() {
-    // Get the ouvre_id and ouvre_titre attributes of the button
-    var ouvre_id = $(this).data('bs-id');
-    var ouvre_titre = $(this).data('bs-title');
-
-    // Update the book title in the E-ticket modal
-    $('.book-title').text(ouvre_titre);
-
-    // Fetch the ticket code from the database using AJAX
-    $.ajax({
-        url: 'fetch_ticket_code.php',
-        method: 'POST',
-        data: {ouvre_id: ouvre_id},
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // Generate the QR code using qrious
-                var qr = new QRious({
-                    element: document.getElementById('qr-code'),
-                    value: response.ticket_code.toString(),
-                    size: 200
-                });
-            } else {
-                alert('Failed to fetch ticket code.');
-            }
-        },
-        error: function() {
-            alert('Failed to fetch ticket code.');
-        }
-    });
-});
-});
 
 
 

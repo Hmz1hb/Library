@@ -122,7 +122,7 @@
         <div class = "container h-100 d-flex align-items-center carousel-inner">
             <div class = "text-center carousel-item active">
                 <!-- <h2 class = "text-capitalize text-white">best collection</h2> -->
-                <h1 class = "text-uppercase py-2 fw-bold text-secondary text-light">new arrivals</h1>
+                <h1 class = "text-uppercase py-2 fw-bold text-secondary text-light">Our Collection</h1>
                 <!-- <a href = "#" class = "btn mt-3 text-uppercase">shop now</a> -->
             </div>
         </div>
@@ -166,7 +166,7 @@
                                                 
                             <div class="col-md-6 col-lg-4 col-xl-3 p-2 <?php echo $row['ouvre_type']; ?>">
                             <div class="collection-img position-relative">
-                                <img src="<?php echo $imgSrc; ?>" class="w-100 ">
+                                <img src="<?php echo $imgSrc; ?>" class="w-100">
                                 <span class="position-absolute bg-primary text-white d-flex align-items-center justify-content-center"><?php echo $row['ouvre_etat']; ?></span>
                             </div>
                             <div class="text-center m-2">
@@ -260,8 +260,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="suc-rep"></div>
+      <div class="text-center">
       <canvas id="qr-code" style="width: 200px; height: 200px;"></canvas>
+      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
