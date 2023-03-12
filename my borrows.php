@@ -129,6 +129,7 @@
           <ul class="dropdown-menu text-small">
             <li><a class="dropdown-item" href="./my reservation.php">My Reservations</a></li>
             <li><a class="dropdown-item" href="./my borrows.php">My Borrows</a></li>
+            <li><a class="dropdown-item" href="./my readings.php">My Readings</a></li>
             <li><a class="dropdown-item" href="./Profile.php">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="logout.php">Sign out</a></li>
@@ -166,6 +167,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                             <div class="content">
+                              <h3>Please respect the 15 days return window</h3>
 
                              <div class = "collection-list mt-4 row gx-0 gy-3">
                 <?php
@@ -181,8 +183,8 @@
                     // Fetch image data from database
                     $sql = "SELECT MIN(ouvrage.ouvre_id) AS ouvre_id, ouvrage.ouvre_titre, ouvrage.ouvre_auteur, ouvrage.ouvre_img, ouvrage.ouvre_etat, ouvrage.ouvre_type, ouvrage.ouvre_editionD, ouvrage.ouvre_achatD, ouvrage.ouvre_pages 
                     FROM ouvrage 
-                    JOIN réservation ON ouvrage.ouvre_id = réservation.ouvre_id
-                    WHERE réservation.A_id = :a_id
+                    JOIN emprunt ON ouvrage.ouvre_id = emprunt.ouvre_id
+                    WHERE emprunt.A_id = :a_id
                     GROUP BY ouvrage.ouvre_titre";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(':a_id', $a_id);

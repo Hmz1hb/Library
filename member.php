@@ -79,6 +79,7 @@
           <ul class="dropdown-menu text-small">
             <li><a class="dropdown-item" href="./my reservation.php">My Reservations</a></li>
             <li><a class="dropdown-item" href="./my borrows.php">My Borrows</a></li>
+            <li><a class="dropdown-item" href="./my readings.php">My Readings</a></li>
             <li><a class="dropdown-item" href="./Profile.php">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="logout.php">Sign out</a></li>

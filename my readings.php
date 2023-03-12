@@ -167,7 +167,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                             <div class="content">
-                              <h4>Please Confirm Your Reservation at the library. Reservations window is 24H</h4>
+                              <h3>Please respect the 15 days return window</h3>
 
                              <div class = "collection-list mt-4 row gx-0 gy-3">
                 <?php
@@ -183,8 +183,8 @@
                     // Fetch image data from database
                     $sql = "SELECT MIN(ouvrage.ouvre_id) AS ouvre_id, ouvrage.ouvre_titre, ouvrage.ouvre_auteur, ouvrage.ouvre_img, ouvrage.ouvre_etat, ouvrage.ouvre_type, ouvrage.ouvre_editionD, ouvrage.ouvre_achatD, ouvrage.ouvre_pages 
                     FROM ouvrage 
-                    JOIN réservation ON ouvrage.ouvre_id = réservation.ouvre_id
-                    WHERE réservation.A_id = :a_id
+                    JOIN emprunt_log ON ouvrage.ouvre_id = emprunt_log.ouvre_id
+                    WHERE emprunt_log.A_id = :a_id
                     GROUP BY ouvrage.ouvre_titre";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(':a_id', $a_id);
