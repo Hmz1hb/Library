@@ -1,68 +1,67 @@
 <?php
-// Start session
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['id'])) {
-  header("Location:http://localhost/Library/Log-in.php");
+// Check if the user is logged in
+if (!isset($_SESSION['bib_id'])) {
+  header('Location: http://localhost/Library/login.php');
   exit();
 }
 
-// Check if reservation ID is set
-if (!isset($_GET['bib_id'])) {
-  header("Location: http://localhost/Library/admin-panel.php");
+// Check if the reservation ID is provided
+if (!isset($_GET['reserve_id'])) {
+  header('Location: http://localhost/Library/admin-panel.php');
   exit();
 }
 
+// Get the reservation ID and book ID
+$reserve_id = $_GET['reserve_id'];
+$bib_id = $_SESSION['bib_id'];
 
-
-
-// Connect to database
+// Connect to the database
 $dbHost = 'localhost';
 $dbName = 'library';
 $dbUser = 'root';
 $dbPass = '';
 
-$error = '';
 try {
   $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   
+  // Get the reservation details
+  $sql = "SELECT * FROM réservation WHERE reserve_id = '$reserve_id'";
+  $result = $conn->query($sql);
+  $reservation = $result->fetch(PDO::FETCH_ASSOC);
+  
+  // Debug output
+  var_dump($reservation);
+  
+  
+  // Calculate the return date (current date + 15 days)
+  $return_date = date('Y-m-d', time());
 
-  // Get reservation ID
-  $reservation_id = $_GET['id'];
+  // Set the initial return confirmation status to 0
+  $empr_retourConfirm = date('Y-m-d', strtotime('+15 days'));
+  
+  // Insert the reservation details into the emprunt table
+  $sql = "INSERT INTO emprunt (ouvre_id, empr_date, empr_retour, empr_retourConfirm, bib_id, A_id, réservation_id) VALUES ('$reservation[ouvre_id]', '$reservation[reserve_date]', '$return_date', '$empr_retourConfirm', '$bib_id', '$reservation[A_id]', '$reserve_id')";
+  $conn->exec($sql);
+  
+  // Debug output
+  var_dump($reservation['ouvre_id'], $reservation['reserve_date'], $return_date, $empr_retourConfirm, $bib_id, $reservation['A_id'], $reserve_id);
+  
 
-  // Get admin ID
-  $admin_id = $_SESSION['user_id'];
-
-  // Prepare SQL statement to update reservation
-  $stmt = $conn->prepare("UPDATE réservation SET bib_id = ?, bib_accepté_par = ? WHERE reserve_id = ?");
-  $stmt->bindParam(1, $bib_id, PDO::PARAM_INT);
-  $stmt->bindParam(2, $admin_id, PDO::PARAM_INT);
-  $stmt->bindParam(3, $reservation_id, PDO::PARAM_INT);
-
-  // Set bib_id to NULL
-  $bib_id = NULL;
-
-  // Execute SQL statement
-  if ($stmt->execute()) {
-    header("Location: admin-panel.php");
-    exit();
-  } else {
-    $error = "Error accepting reservation: " . $conn->error;
-  }
-
-  // Close statement
-  $stmt = null;
-
-  // Close database connection
-  $conn = null;
-
+  
+  // Delete the reservation from the réservation table
+  $sql = "DELETE FROM réservation WHERE reserve_id = '$reserve_id'";
+  $conn->exec($sql);
+  
+  // Redirect to the admin panel
+  header('Location: http://localhost/Library/admin-panel.php');
+  exit();
+  
 } catch(PDOException $e) {
-  $error = 'Error: ' . $e->getMessage();
+    echo "Connection failed: " . $e->getMessage();
+    exit();
 }
 
-if ($error) {
-  echo $error;
-}
 ?>

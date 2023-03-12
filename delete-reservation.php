@@ -4,12 +4,12 @@ session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['id'])) {
-  header("Location:http://localhost/Library/Log-in.php");
+  header("Location: http://localhost/Library/Log-in.php");
   exit();
 }
 
 // Check if reservation ID is set
-if (!isset($_GET['bib_id'])) {
+if (!isset($_GET['reserve_id'])) {
   header("Location: http://localhost/Library/admin-panel.php");
   exit();
 }
@@ -27,16 +27,15 @@ try {
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Get reservation ID
-  $reservation_id = $_GET['id'];
+  $reservation_id = $_GET['reserve_id'];
 
   // Prepare SQL statement to delete reservation
   $stmt = $conn->prepare("DELETE FROM réservation WHERE reserve_id = ?");
   $stmt->bindParam(1, $reservation_id, PDO::PARAM_INT);
 
- // Execute SQL statement
- if ($stmt->execute()) {
-    header("Location: http://localhost/Library/admin-panel.php");
-    exit();
+  // Execute SQL statement
+  if ($stmt->execute()) {
+    echo "Reservation deleted successfully.";
   } else {
     $error = "Error deleting reservation: " . $conn->errorInfo()[2];
   }

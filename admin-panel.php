@@ -308,7 +308,7 @@ try {
 }
 
 // Prepare the SQL statement to retrieve reservation data
-$sql = "SELECT r.ticket_code, o.ouvre_titre, r.reserve_date, a.A_nom FROM réservation r 
+$sql = "SELECT r.ticket_code, o.ouvre_titre, r.reserve_date, a.A_nom , r.reserve_id FROM réservation r 
         JOIN ouvrage o ON r.ouvre_id = o.ouvre_id
         JOIN adhérent a ON r.A_id = a.A_id";
 
@@ -335,7 +335,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </thead>
     <tbody>
       <?php foreach ($reservations as $reservation): ?>
-        <tr>
+        <tr data-reservation-id="<?php echo $reservation['reserve_id']; ?>">
           <td><?php echo $reservation['ticket_code']; ?></td>
           <td><?php echo $reservation['ouvre_titre']; ?></td>
           <td><?php echo $reservation['reserve_date']; ?></td>
@@ -362,9 +362,10 @@ $(document).ready(function() {
   $(".accept-button").click(function() {
     // Get reservation ID from data attribute
     var reservationId = $(this).closest("tr").data("reservation-id");
-    // Send AJAX request to accept.php with reservation ID as parameter
+    // Send AJAX request to accept.php with reservation ID and book ID as parameters
+
     $.ajax({
-      url: "accept-reservation.php?reserve_id=" + reservationId,
+      url: "http://localhost/Library/accept-reservation.php?&reserve_id=" + reservationId,
       success: function() {
         // Reload the page after successful acceptance
         location.reload();
@@ -375,6 +376,8 @@ $(document).ready(function() {
       }
     });
   });
+});
+
   
   // Add click event listener to decline button
   $(".decline-button").click(function() {
@@ -382,18 +385,18 @@ $(document).ready(function() {
     var reservationId = $(this).closest("tr").data("reservation-id");
     // Send AJAX request to delete_reservation.php with reservation ID as parameter
     $.ajax({
-      url: "delete_reservation.php?reserve_id=" + reservationId,
+      url: "http://localhost/Library/delete-reservation.php?reserve_id=" + reservationId,
       success: function() {
         // Reload the page after successful deletion
         location.reload();
       },
-      error: function() {
-        // Display error message if deletion fails
-        alert("Failed to decline reservation.");
-      }
+      error: function(xhr, status, error) {
+  alert("Failed to decline reservation. Error: " + error);
+}
+
     });
   });
-});
+
 
 </script>
 
