@@ -167,7 +167,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                             <div class="content">
-                              <h3>Please respect the 15 days return window</h3>
+                              <h3>All the books that you have borrowed from the library</h3>
 
                              <div class = "collection-list mt-4 row gx-0 gy-3">
                 <?php
