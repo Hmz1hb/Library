@@ -1,67 +1,163 @@
 <?php
+// // Start session
+// session_start();
+
+// // Check if user is logged in
+// if (!isset($_SESSION['bib_id'])) {
+//   header("Location: http://localhost/Library/Log-in.php");
+//   exit();
+// }
+
+// // Check if reservation ID is set
+// if (!isset($_GET['reserve_id'])) {
+//   header("Location: http://localhost/Library/admin-panel.php");
+//   exit();
+// }
+
+// // Connect to database
+// $dbHost = 'localhost';
+// $dbName = 'library';
+// $dbUser = 'root';
+// $dbPass = '';
+
+// $error = '';
+
+// try {
+//   $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
+//   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//   // Get reservation ID
+//   $reservation_id = $_GET['reserve_id'];
+
+//   // Begin transaction
+//   $conn->beginTransaction();
+
+//   // Prepare SQL statement to select reservation data
+//   $stmt_select = $conn->prepare("SELECT * FROM réservation WHERE reserve_id = ?");
+//   $stmt_select->bindParam(1, $reservation_id, PDO::PARAM_INT);
+
+//   // Execute SQL statement
+//   $stmt_select->execute();
+
+//   // Fetch reservation data
+//   $reservation_data = $stmt_select->fetch(PDO::FETCH_ASSOC);
+
+//   // Prepare SQL statement to insert reservation data into emprunt table
+//   $stmt_insert = $conn->prepare("INSERT INTO emprunt (ouvre_id, empr_date, empr_retour, empr_retourConfirm, bib_id, A_id, réservation_id) VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 15 DAY), NULL, ?, ?, ?)");
+//   $stmt_insert->bindParam(1, $reservation_data['ouvre_id'], PDO::PARAM_INT);
+//   $stmt_insert->bindParam(2, $_SESSION['id'], PDO::PARAM_INT);
+//   $stmt_insert->bindParam(3, $reservation_id, PDO::PARAM_INT);
+
+//   // Execute SQL statement
+//   $stmt_insert->execute();
+
+//   // Prepare SQL statement to delete reservation
+//   $stmt_delete = $conn->prepare("DELETE FROM réservation WHERE reserve_id = ?");
+//   $stmt_delete->bindParam(1, $reservation_id, PDO::PARAM_INT);
+
+//   // Execute SQL statement
+//   if ($stmt_delete->execute()) {
+//     // Commit transaction if all statements executed successfully
+//     $conn->commit();
+//     echo "Reservation copied to emprunt table and deleted from réservation table successfully.";
+//   } else {
+//     // Roll back transaction if there was an error executing any statement
+//     $conn->rollBack();
+//     $error = "Error deleting reservation: " . $conn->errorInfo()[2];
+//   }
+
+//   // Close statements
+//   $stmt_select = null;
+//   $stmt_insert = null;
+//   $stmt_delete = null;
+
+//   // Close database connection
+//   $conn = null;
+
+// } catch(PDOException $e) {
+//   // Roll back transaction and output error message if there was a PDO exception
+//   $conn->rollBack();
+//   $error = 'Error: ' . $e->getMessage();
+// }
+
+// if ($error) {
+//   echo $error;
+// }
+// Start session
 session_start();
 
-// Check if the user is logged in
+// Check if user is logged in
 if (!isset($_SESSION['bib_id'])) {
-  header('Location: http://localhost/Library/login.php');
+  header("Location: http://localhost/Library/Log-in.php");
   exit();
 }
 
-// Check if the reservation ID is provided
+// Check if reservation ID is set
 if (!isset($_GET['reserve_id'])) {
-  header('Location: http://localhost/Library/admin-panel.php');
+  header("Location: http://localhost/Library/admin-panel.php");
   exit();
 }
 
-// Get the reservation ID and book ID
-$reserve_id = $_GET['reserve_id'];
-$bib_id = $_SESSION['bib_id'];
-
-// Connect to the database
+// Connect to database
 $dbHost = 'localhost';
 $dbName = 'library';
 $dbUser = 'root';
 $dbPass = '';
 
+$error = '';
+
 try {
-  $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  
-  // Get the reservation details
-  $sql = "SELECT * FROM réservation WHERE reserve_id = '$reserve_id'";
-  $result = $conn->query($sql);
-  $reservation = $result->fetch(PDO::FETCH_ASSOC);
-  
-  // Debug output
-  var_dump($reservation);
-  
-  
-  // Calculate the return date (current date + 15 days)
-  $return_date = date('Y-m-d', time());
+  $conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
 
-  // Set the initial return confirmation status to 0
-  $empr_retourConfirm = date('Y-m-d', strtotime('+15 days'));
-  
-  // Insert the reservation details into the emprunt table
-  $sql = "INSERT INTO emprunt (ouvre_id, empr_date, empr_retour, empr_retourConfirm, bib_id, A_id, réservation_id) VALUES ('$reservation[ouvre_id]', '$reservation[reserve_date]', '$return_date', '$empr_retourConfirm', '$bib_id', '$reservation[A_id]', '$reserve_id')";
-  $conn->exec($sql);
-  
-  // Debug output
-  var_dump($reservation['ouvre_id'], $reservation['reserve_date'], $return_date, $empr_retourConfirm, $bib_id, $reservation['A_id'], $reserve_id);
-  
+  // Check connection
+  if ($conn->connect_error) {
+    throw new Exception("Connection failed: " . $conn->connect_error);
+  }
 
-  
-  // Delete the reservation from the réservation table
-  $sql = "DELETE FROM réservation WHERE reserve_id = '$reserve_id'";
-  $conn->exec($sql);
-  
-  // Redirect to the admin panel
-  header('Location: http://localhost/Library/admin-panel.php');
-  exit();
-  
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    exit();
+  // Get reservation ID
+  $reservation_id = $_GET['reserve_id'];
+  echo "Reservation ID: " . $reservation_id;
+
+  // Begin transaction
+  $conn->begin_transaction();
+
+  // Prepare SQL statement to select reservation data
+  $stmt_select = $conn->prepare("SELECT * FROM réservation WHERE reserve_id = ?");
+  $stmt_select->bind_param("i", $reservation_id);
+
+  // Execute SQL statement
+  $stmt_select->execute();
+
+  // Fetch reservation data
+  $reservation_data = $stmt_select->get_result()->fetch_assoc();
+
+  // Prepare SQL statement to insert reservation data into emprunt table
+  $stmt_insert = $conn->prepare("INSERT INTO emprunt (ouvre_id, empr_date, empr_retour, empr_retourConfirm, bib_id, A_id, réservation_id) 
+  VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 15 DAY), NULL, ?, ?, ?)");
+  $stmt_insert->bind_param("iiii", $reservation_data['ouvre_id'], $_SESSION['bib_id'], $reservation_data['A_id'], $reservation_id);
+
+  // Execute SQL statement
+  $stmt_insert->execute();
+
+  // Commit transaction if all statements executed successfully
+  $conn->commit();
+  echo "Reservation copied to emprunt table successfully.";
+
+  // Close statements
+  $stmt_select->close();
+  $stmt_insert->close();
+
+  // Close database connection
+  $conn->close();
+
+} catch (Exception $e) {
+  // Roll back transaction and output error message if there was an exception
+  $conn->rollback();
+  $error = 'Error: ' . $e->getMessage();
+}
+
+if ($error) {
+  echo $error;
 }
 
 ?>
