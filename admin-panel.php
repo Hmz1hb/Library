@@ -347,44 +347,75 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div class="btn-group mr-2">
             <button type="button" class="btn btn-sm btn-outline-secondary accept-button">Accept</button>
             <button type="button" class="btn btn-sm btn-outline-secondary decline-button">Decline</button>
-            </div>
+          </div>
           </td>
         </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
 </div>
+<?php
+// Connect to database using PDO
+$dbHost = 'localhost';
+$dbName = 'library';
+$dbUser = 'root';
+$dbPass = '';
+
+// Connect to the database
+try {
+    $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+
+// Prepare the SQL statement to retrieve emprunt data
+// Prepare the SQL statement to retrieve emprunt data
+$sql = "SELECT e.ouvre_id, o.ouvre_titre, e.empr_date, e.empr_retour, e.empr_retourConfirm, a.A_nom, e.empr_id
+        FROM emprunt e 
+        JOIN ouvrage o ON e.ouvre_id = o.ouvre_id
+        JOIN adhérent a ON e.A_id = a.A_id";
+
+
+// Execute the prepared statement
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+
+// Fetch the result set as an associative array
+$emprunts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <h2>Emprunts</h2>
 <div class="table-responsive">
   <table class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>ticket_code</th>
-        <th>ouvre_titre</th>
-        <th>reserve_date</th>
-        <th>A_nom</th>
-        <th>Accept / decline</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($reservations as $reservation): ?>
-        <tr data-reservation-id="<?php echo $reservation['reserve_id']; ?>">
-          <td><?php echo $reservation['ticket_code']; ?></td>
-          <td><?php echo $reservation['ouvre_titre']; ?></td>
-          <td><?php echo $reservation['reserve_date']; ?></td>
-          <td><?php echo $reservation['A_nom']; ?></td>
-          <td>
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary confirm-button">confirm</button>
-            </div>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+  <thead>
+  <tr>
+    <th>A_nom</th>
+    <th>ouvre_titre</th>
+    <th>empr_date</th>
+    <th>empr_retour</th>
+    <th>empr_retourConfirm</th>
+    <th>confirme retour button</th>
+  </tr>
+</thead>
+<tbody>
+  <?php foreach ($emprunts as $emprunt): ?>
+    <tr data-emprunt-id="<?php echo $emprunt['empr_id']; ?>">
+      <td><?php echo $emprunt['A_nom']; ?></td>
+      <td><?php echo $emprunt['ouvre_titre']; ?></td>
+      <td><?php echo $emprunt['empr_date']; ?></td>
+      <td><?php echo $emprunt['empr_retour']; ?></td>
+      <td><?php echo $emprunt['empr_retourConfirm']; ?></td>
+      <td>
+        <div class="btn-group mr-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary confirm-button">confirm</button>
+        </div>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
+</table>
 </div>
-
       </main>
     </div>
   </div>
@@ -432,10 +463,10 @@ $(".accept-button").click(function() {
   // Add click event listener to decline button
   $(".confirm-button").click(function() {
     // Get reservation ID from data attribute
-    var reservationId = $(this).closest("tr").data("reservation-id");
+    var emprid = $(this).closest("tr").data("emprunt-id");
     // Send AJAX request to delete_reservation.php with reservation ID as parameter
     $.ajax({
-      url: "http://localhost/Library/delete-reservation.php?reserve_id=" + reservationId,
+      url: "http://localhost/Library/emprunt-confirme.php?empr_id=" + emprid,
       success: function() {
         // Reload the page after successful deletion
         location.reload();
