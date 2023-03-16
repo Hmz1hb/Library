@@ -204,7 +204,7 @@
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./admin-panel.php">
+              <a class="nav-link " aria-current="page" href="./admin-panel.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
@@ -240,7 +240,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./admin-ouvrage-add.php">
+              <a class="nav-link active" href="./admin-ouvrage-add.php">
                 <span data-feather="bar-chart-2"></span>
                 Ajouter un ouvrage
               </a>
@@ -254,210 +254,100 @@
       <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
         <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Dashboard</h1>
+          <h1 class="h2">Ajouter un ouvrage</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary export-button">Export</button>
+            <!-- <button type="button" class="btn btn-sm btn-outline-secondary export-button">Export</button> -->
           </div>
         </div>
         </div>
-        <?php
-// Connect to database using PDO
-$dbHost = 'localhost';
-$dbName = 'library';
-$dbUser = 'root';
-$dbPass = '';
-
-// Connect to the database
-try {
-    $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
-// Prepare the SQL statement to retrieve reservation data
-$sql = "SELECT r.ticket_code, o.ouvre_titre, r.reserve_date, a.A_nom, r.reserve_id
-        FROM réservation r 
-        JOIN ouvrage o ON r.ouvre_id = o.ouvre_id
-        JOIN adhérent a ON r.A_id = a.A_id
-        LEFT JOIN emprunt e ON r.reserve_id = e.réservation_id
-        WHERE e.réservation_id IS NULL";
-
-// Execute the prepared statement
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-
-// Fetch the result set as an associative array
-$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<!-- Display the reservation data in a table -->
-<h2>Reservation</h2>
-<div class="table-responsive">
-  <table id="reservation-table" class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>Ticket code</th>
-        <th>Ouvre Titre</th>
-        <th>Reservation Date</th>
-        <th>Nom D'Adhérent</th>
-        <th>Accept / decline</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($reservations as $reservation): ?>
-        <tr data-reservation-id="<?php echo $reservation['reserve_id']; ?>">
-          <td><?php echo $reservation['ticket_code']; ?></td>
-          <td><?php echo $reservation['ouvre_titre']; ?></td>
-          <td><?php echo $reservation['reserve_date']; ?></td>
-          <td><?php echo $reservation['A_nom']; ?></td>
-          <td>
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary accept-button">Accept</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary decline-button">Decline</button>
-          </div>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-<?php
-// Connect to database using PDO
-$dbHost = 'localhost';
-$dbName = 'library';
-$dbUser = 'root';
-$dbPass = '';
-
-// Connect to the database
-try {
-    $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
-// Prepare the SQL statement to retrieve emprunt data
-// Prepare the SQL statement to retrieve emprunt data
-$sql = "SELECT e.ouvre_id, o.ouvre_titre, e.empr_date, e.empr_retour, a.A_nom, e.empr_id
-        FROM emprunt e 
-        JOIN ouvrage o ON e.ouvre_id = o.ouvre_id
-        JOIN adhérent a ON e.A_id = a.A_id
-        WHERE e.empr_retourConfirm IS NULL";
-
-
-
-// Execute the prepared statement
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-
-// Fetch the result set as an associative array
-$emprunts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<h2>Emprunts en cour</h2>
-<div  class="table-responsive">
-  <table id="reservation-table" class="table table-striped table-sm">
-  <thead>
-  <tr>
-    <th>Adhérent</th>
-    <th>Ouvre Titre</th>
-    <th>Emprunt Date</th>
-    <th>Expiration date d'emprunt</th>
-    <th>Confirmation de retourn</th>
-  </tr>
-</thead>
-<tbody>
-  <?php foreach ($emprunts as $emprunt): ?>
-    <tr data-emprunt-id="<?php echo $emprunt['empr_id']; ?>">
-      <td><?php echo $emprunt['A_nom']; ?></td>
-      <td><?php echo $emprunt['ouvre_titre']; ?></td>
-      <td><?php echo $emprunt['empr_date']; ?></td>
-      <td><?php echo $emprunt['empr_retour']; ?></td>
-      <td>
-        <div class="btn-group mr-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary confirm-button">confirm</button>
+        <form id="myForm" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="ouvre_titre" class="form-label">Titre</label>
+            <input type="text" class="form-control" id="ouvre_titre" name="ouvre_titre" required>
         </div>
-      </td>
-    </tr>
-  <?php endforeach; ?>
-</tbody>
-</table>
-</div>
+        <div class="mb-3">
+            <label for="ouvre_auteur" class="form-label">Auteur</label>
+            <input type="text" class="form-control" id="ouvre_auteur" name="ouvre_auteur" required>
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_img" class="form-label">Image</label>
+            <input type="file" class="form-control" id="ouvre_img" name="ouvre_img" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_etat" class="form-label">Etat</label>
+            <select class="form-control" id="ouvre_etat" name="ouvre_etat" required>
+                <option value="#">Choisi l'Etat </option>
+                <option value="Neuf">Neuf</option>
+                <option value="Bon état">Bon état</option>
+                <option value="Acceptable">Acceptable</option>
+                <option value="Assez usé">Assez usé</option>
+                <option value="Déchiré">Déchiré</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_type" class="form-label">Type</label>
+            <input type="text" class="form-control" id="ouvre_type" name="ouvre_type" required>
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_editionD" class="form-label">Date d'édition</label>
+            <input type="date" class="form-control" id="ouvre_editionD" name="ouvre_editionD">
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_achatD" class="form-label">Date d'achat</label>
+            <input type="date" class="form-control" id="ouvre_achatD" name="ouvre_achatD">
+        </div>
+        <div class="mb-3">
+            <label for="ouvre_pages" class="form-label">Nombre de pages</label>
+            <input type="number" class="form-control" id="ouvre_pages" name="ouvre_pages">
+        </div>
+        <div id="result">
+            <h3 id="result"></h3>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
 
-      </main>
+    <div class="table-responsive">
+    </div>
 
-
-  <script>
-
-$(".accept-button").click(function() {
-    // Get reservation ID from data attribute
-    var reservationId = $(this).closest("tr").data("reservation-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
+</main>
+ <script>
+    $(document).ready(function() {
+  $('#myForm').submit(function(e) {
+    e.preventDefault(); // prevent default form submit action
+    
+    // get form data
+    var formData = new FormData(this);
+    
+    // send form data to PHP script
     $.ajax({
-      url: "http://localhost/Library/accept-reservation.php?reserve_id=" + reservationId,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
+      url: 'add_book.php', // path to your PHP script
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function(response) {
+        $('#result').html(response); // display response in result div
+        setTimeout(function(){
+          location.reload(); // reload the webpage after 3 seconds
+        }, 3000);
       },
       error: function(xhr, status, error) {
-  alert("Failed to decline reservation. Error: " + error);
-}
-
+        console.log(xhr.responseText); // log error message
+      }
     });
   });
-
-
-
-  
-  // Add click event listener to decline button
-  $(".decline-button").click(function() {
-    // Get reservation ID from data attribute
-    var reservationId = $(this).closest("tr").data("reservation-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
-    $.ajax({
-      url: "http://localhost/Library/delete-reservation.php?reserve_id=" + reservationId,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-        // Display error message
-        alert("Failed to decline reservation. Error: " + error);
-      }
-    });
 });
 
-  // Add click event listener to decline button
-  $(".confirm-button").click(function() {
-    // Get reservation ID from data attribute
-    var emprid = $(this).closest("tr").data("emprunt-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
-    $.ajax({
-      url: "http://localhost/Library/emprunt-confirme.php?empr_id=" + emprid,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-        // Display error message
-        alert("Failed to decline reservation. Error: " + error);
-      }
-    });
-});
-
-
-</script>
-
-
-
- 
+ </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.24.1/feather.min.js"
     integrity="sha384-EbSscX4STvYAC/DxHse8z5gEDaNiKAIGW+EpfzYTfQrgIlHywXXrM9SUIZ0BlyfF"
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+  
+
+
  
 </body>
 

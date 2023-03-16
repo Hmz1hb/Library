@@ -1,4 +1,9 @@
 <?php
+if (!isset($_SESSION['bib_id'])) {
+    header("Location: http://localhost/Library/Log-in.php");
+    exit();
+  }
+  
 // Connect to database using PDO
 $dbHost = 'localhost';
 $dbName = 'library';
@@ -13,6 +18,7 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 
+
 // Check if empr_id parameter is set
 if (!isset($_GET['empr_id'])) {
     die("No emprunt ID specified.");
@@ -22,12 +28,13 @@ if (!isset($_GET['empr_id'])) {
 $emprid = $_GET['empr_id'];
 
 // Prepare the SQL statement to update empr_retourConfirm column with the current date
-$sql = "UPDATE emprunt SET empr_retourConfirm = CURRENT_TIMESTAMP WHERE empr_id = :emprid";
+$sql = "UPDATE emprunt SET empr_retourConfirm = NOW() WHERE empr_id = :emprid";
 
 // Execute the prepared statement
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':emprid', $emprid, PDO::PARAM_INT);
 $stmt->execute();
+
 
 // Redirect back to admin panel
 header("Location: admin-panel.php");

@@ -204,7 +204,7 @@
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./admin-panel.php">
+              <a class="nav-link " aria-current="page" href="./admin-panel.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
@@ -216,7 +216,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./admin-emprunt.php">
+              <a class="nav-link active" href="./admin-emprunt.php">
                 <span data-feather="shopping-cart"></span>
                 Emprunts on cour
               </a>
@@ -254,75 +254,13 @@
       <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
         <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Dashboard</h1>
+          <h1 class="h2">Emprunts en cour</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
             <button type="button" class="btn btn-sm btn-outline-secondary export-button">Export</button>
           </div>
         </div>
         </div>
-        <?php
-// Connect to database using PDO
-$dbHost = 'localhost';
-$dbName = 'library';
-$dbUser = 'root';
-$dbPass = '';
-
-// Connect to the database
-try {
-    $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
-// Prepare the SQL statement to retrieve reservation data
-$sql = "SELECT r.ticket_code, o.ouvre_titre, r.reserve_date, a.A_nom, r.reserve_id
-        FROM réservation r 
-        JOIN ouvrage o ON r.ouvre_id = o.ouvre_id
-        JOIN adhérent a ON r.A_id = a.A_id
-        LEFT JOIN emprunt e ON r.reserve_id = e.réservation_id
-        WHERE e.réservation_id IS NULL";
-
-// Execute the prepared statement
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-
-// Fetch the result set as an associative array
-$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<!-- Display the reservation data in a table -->
-<h2>Reservation</h2>
-<div class="table-responsive">
-  <table id="reservation-table" class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>Ticket code</th>
-        <th>Ouvre Titre</th>
-        <th>Reservation Date</th>
-        <th>Nom D'Adhérent</th>
-        <th>Accept / decline</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($reservations as $reservation): ?>
-        <tr data-reservation-id="<?php echo $reservation['reserve_id']; ?>">
-          <td><?php echo $reservation['ticket_code']; ?></td>
-          <td><?php echo $reservation['ouvre_titre']; ?></td>
-          <td><?php echo $reservation['reserve_date']; ?></td>
-          <td><?php echo $reservation['A_nom']; ?></td>
-          <td>
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary accept-button">Accept</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary decline-button">Decline</button>
-          </div>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
 <?php
 // Connect to database using PDO
 $dbHost = 'localhost';
@@ -356,7 +294,7 @@ $stmt->execute();
 $emprunts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<h2>Emprunts en cour</h2>
+<!-- <h2>Emprunts en cour</h2> -->
 <div  class="table-responsive">
   <table id="reservation-table" class="table table-striped table-sm">
   <thead>
@@ -391,44 +329,6 @@ $emprunts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <script>
 
-$(".accept-button").click(function() {
-    // Get reservation ID from data attribute
-    var reservationId = $(this).closest("tr").data("reservation-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
-    $.ajax({
-      url: "http://localhost/Library/accept-reservation.php?reserve_id=" + reservationId,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-  alert("Failed to decline reservation. Error: " + error);
-}
-
-    });
-  });
-
-
-
-  
-  // Add click event listener to decline button
-  $(".decline-button").click(function() {
-    // Get reservation ID from data attribute
-    var reservationId = $(this).closest("tr").data("reservation-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
-    $.ajax({
-      url: "http://localhost/Library/delete-reservation.php?reserve_id=" + reservationId,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-        // Display error message
-        alert("Failed to decline reservation. Error: " + error);
-      }
-    });
-});
-
   // Add click event listener to decline button
   $(".confirm-button").click(function() {
     // Get reservation ID from data attribute
@@ -448,6 +348,29 @@ $(".accept-button").click(function() {
 });
 
 
+
+
+// Select the export button element
+var $exportButton = $('.export-button');
+
+// Add an event listener to the export button
+$exportButton.on('click', function() {
+  // Select the table element
+  var $table = $('#reservation-table');
+
+  // Convert the table to a worksheet
+  var worksheet = XLSX.utils.table_to_sheet($table[0]);
+
+  // Convert the worksheet to a workbook
+  var workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Reservation');
+
+  // Export the workbook
+  var filename = 'Emprunt.xlsx';
+  XLSX.writeFile(workbook, filename);
+});
+
+
 </script>
 
 
@@ -458,6 +381,8 @@ $(".accept-button").click(function() {
     integrity="sha384-EbSscX4STvYAC/DxHse8z5gEDaNiKAIGW+EpfzYTfQrgIlHywXXrM9SUIZ0BlyfF"
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+
  
 </body>
 

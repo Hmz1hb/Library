@@ -66,13 +66,28 @@
     </style>
   </head>
   <body>
-  <?php    session_start();
-           // Check if the user is logged in
-           if(!isset($_SESSION['id'])) {
-            // Redirect the user to the login page
-            header("Location:http://localhost/Library/land-page.php");
-            exit;
-          }
+  <?php    
+session_start();
+
+// Check if the user is logged in and has fewer than 3 penalties
+if (isset($_SESSION['id'])) {
+  $userId = $_SESSION['id'];
+  $db = new mysqli('localhost', 'root', '', 'library');
+  $query = "SELECT A_pénalités FROM `adhérent` WHERE A_id = $userId";
+  $result = $db->query($query);
+  $row = $result->fetch_assoc();
+  $penalties = $row['A_pénalités'];
+  if ($penalties >= 3) {
+    // Redirect the user to a page indicating that they cannot log in
+    header("Location: http://localhost/Library/penalty.php");
+    exit;
+  }
+} else {
+  // Redirect the user to the login page
+  header("Location: http://localhost/Library/Log-in.php");
+  exit;
+}
+
   ?>
 
   <!-- navbar -->

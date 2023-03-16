@@ -204,13 +204,13 @@
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./admin-panel.php">
+              <a class="nav-link" aria-current="page" href="./admin-panel.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./admin-reservation.php">
+              <a class="nav-link active" href="./admin-reservation.php">
                 <span data-feather="file"></span>
                 Reservation
               </a>
@@ -254,13 +254,14 @@
       <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
         <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Dashboard</h1>
+          <h1 class="h2">Reservation</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
             <button type="button" class="btn btn-sm btn-outline-secondary export-button">Export</button>
           </div>
         </div>
         </div>
+
         <?php
 // Connect to database using PDO
 $dbHost = 'localhost';
@@ -292,8 +293,8 @@ $stmt->execute();
 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!-- Display the reservation data in a table -->
-<h2>Reservation</h2>
+
+<!-- <h2>Reservation</h2> -->
 <div class="table-responsive">
   <table id="reservation-table" class="table table-striped table-sm">
     <thead>
@@ -322,68 +323,6 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php endforeach; ?>
     </tbody>
   </table>
-</div>
-<?php
-// Connect to database using PDO
-$dbHost = 'localhost';
-$dbName = 'library';
-$dbUser = 'root';
-$dbPass = '';
-
-// Connect to the database
-try {
-    $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
-// Prepare the SQL statement to retrieve emprunt data
-// Prepare the SQL statement to retrieve emprunt data
-$sql = "SELECT e.ouvre_id, o.ouvre_titre, e.empr_date, e.empr_retour, a.A_nom, e.empr_id
-        FROM emprunt e 
-        JOIN ouvrage o ON e.ouvre_id = o.ouvre_id
-        JOIN adhérent a ON e.A_id = a.A_id
-        WHERE e.empr_retourConfirm IS NULL";
-
-
-
-// Execute the prepared statement
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-
-// Fetch the result set as an associative array
-$emprunts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<h2>Emprunts en cour</h2>
-<div  class="table-responsive">
-  <table id="reservation-table" class="table table-striped table-sm">
-  <thead>
-  <tr>
-    <th>Adhérent</th>
-    <th>Ouvre Titre</th>
-    <th>Emprunt Date</th>
-    <th>Expiration date d'emprunt</th>
-    <th>Confirmation de retourn</th>
-  </tr>
-</thead>
-<tbody>
-  <?php foreach ($emprunts as $emprunt): ?>
-    <tr data-emprunt-id="<?php echo $emprunt['empr_id']; ?>">
-      <td><?php echo $emprunt['A_nom']; ?></td>
-      <td><?php echo $emprunt['ouvre_titre']; ?></td>
-      <td><?php echo $emprunt['empr_date']; ?></td>
-      <td><?php echo $emprunt['empr_retour']; ?></td>
-      <td>
-        <div class="btn-group mr-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary confirm-button">confirm</button>
-        </div>
-      </td>
-    </tr>
-  <?php endforeach; ?>
-</tbody>
-</table>
 </div>
 
       </main>
@@ -429,22 +368,26 @@ $(".accept-button").click(function() {
     });
 });
 
-  // Add click event listener to decline button
-  $(".confirm-button").click(function() {
-    // Get reservation ID from data attribute
-    var emprid = $(this).closest("tr").data("emprunt-id");
-    // Send AJAX request to delete_reservation.php with reservation ID as parameter
-    $.ajax({
-      url: "http://localhost/Library/emprunt-confirme.php?empr_id=" + emprid,
-      success: function() {
-        // Reload the page after successful deletion
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-        // Display error message
-        alert("Failed to decline reservation. Error: " + error);
-      }
-    });
+
+
+// Select the export button element
+var $exportButton = $('.export-button');
+
+// Add an event listener to the export button
+$exportButton.on('click', function() {
+  // Select the table element
+  var $table = $('#reservation-table');
+
+  // Convert the table to a worksheet
+  var worksheet = XLSX.utils.table_to_sheet($table[0]);
+
+  // Convert the worksheet to a workbook
+  var workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Reservation');
+
+  // Export the workbook
+  var filename = 'reservation.xlsx';
+  XLSX.writeFile(workbook, filename);
 });
 
 
@@ -458,6 +401,8 @@ $(".accept-button").click(function() {
     integrity="sha384-EbSscX4STvYAC/DxHse8z5gEDaNiKAIGW+EpfzYTfQrgIlHywXXrM9SUIZ0BlyfF"
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+
  
 </body>
 

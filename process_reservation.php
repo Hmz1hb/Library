@@ -37,7 +37,7 @@ $reserve_id = $pdo->lastInsertId();
 $ticket_code = $reserve_id . rand(10000, 99999);
 
 // Insert a new row into the reservation table
-$stmt = $pdo->prepare("INSERT INTO réservation (ouvre_id, A_id, Date_limite_retrait, ticket_code) VALUES (?, ?, ?, ?)");
+$stmt = $pdo->prepare("INSERT INTO réservation (ouvre_id, A_id, reserve_date, Date_limite_retrait, ticket_code) VALUES (?, ?, NOW(), ?, ?)");
 $stmt->execute([$ouvre_id, $_SESSION['id'], $date_limite_retrait, $ticket_code]);
 
 // Insert the ticket code into the database
