@@ -190,7 +190,7 @@
     <input id="search-input" class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <ul class="navbar-nav px-3">
       <li class="nav-item text-nowrap">
-        <a class="nav-link" href="./logout.php">Sign out</a>
+      <a class="nav-link" href="./logout.php">Sign out - <?php echo $result['bib_nom'];?></a>
       </li>
     </ul>
   </nav>
