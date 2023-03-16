@@ -45,9 +45,9 @@ ob_start()
               <div class="col-xl-6">
                 <div class="card-body p-md-5 text-black">
                   <a href="../Page Visiteure/Guest.php" class="navbar-brand d-flex align-items-center mt-5">
-                    <img src="./Img/boul-removebg-preview.png" alt="" srcset="" width="30%" class="position-relative top-0 start-50 translate-middle pt-5">
+                    <img src="./images/Screenshot (8).png" alt="" srcset="" width="100%" class="position-relative top-0 start-50 translate-middle pt-5">
                   </a>
-                  <h3 class="mb-5 text-center">Unlock Real Estate's Full Potential <br> Sign Up Now!</h3>
+                  <h3 class="mb-5 text-center">Sign Up Now!</h3>
 
                   <div class="row">
                     <div class="col-md-6 mb-4">
@@ -172,8 +172,8 @@ ob_start()
      $passHash = password_hash($password, PASSWORD_DEFAULT);
    
      // Prepare and execute SQL query
-     $stmt = $conn->prepare("INSERT INTO `adhérent` (A_nom, A_adresse, A_email, A_phone, A_CIN, A_dateN, A_type, A_userName, A_pass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-     $stmt->execute([$name, $address, $email, $phone, $cin, $birthdate, $type, $username, $passHash]);
+     $stmt = $conn->prepare("INSERT INTO `adhérent` (A_nom, A_adresse, A_email, A_phone, A_CIN, A_dateN, A_type, A_userName, A_pass, A_creation, A_pénalités) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 0)");
+     $stmt->execute([$name, $address, $email, $phone, $cin, $birthdate,$type,$username,$passHash]);
    
      // Check if the query was successful
      if ($stmt->rowCount() > 0) {

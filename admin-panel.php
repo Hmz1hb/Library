@@ -5,14 +5,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Hugo 0.72.0">
-  <title>Dashboard Template</title>
+  <title>The Reading Room - Dashboard</title>
 
   <link rel="canonical" href="https://v5.getbootstrap.com/docs/5.0/examples/dashboard/">
 
 
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
     integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -23,7 +21,6 @@
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
   <style>
     .bd-placeholder-img {
       font-size: 1.125rem;
@@ -185,7 +182,10 @@
 
 
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Company name</a>
+<a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="./admin-panel.php">
+    <i class="fa fa-book" aria-hidden="true"></i>
+      <span class = "text-uppercase fw-lighter ms-2">The Reading Room</span>
+  </a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
       data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -246,8 +246,6 @@
               </a>
             </li>
           </ul>
-
-      
         </div>
       </nav>
 
@@ -444,6 +442,20 @@ $(".accept-button").click(function() {
         // Display error message
         alert("Failed to decline reservation. Error: " + error);
       }
+    });
+});
+
+$("#search-input").on("input", function() {
+    let searchTerm = $(this).val().toLowerCase();
+    $("#reservation-table tbody tr").each(function() {
+        let ticketCode = $(this).find("td:nth-child(1)").text().toLowerCase();
+        let ouvreTitre = $(this).find("td:nth-child(2)").text().toLowerCase();
+        let nomAdherent = $(this).find("td:nth-child(4)").text().toLowerCase();
+        if (ticketCode.includes(searchTerm) || ouvreTitre.includes(searchTerm) || nomAdherent.includes(searchTerm)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
     });
 });
 

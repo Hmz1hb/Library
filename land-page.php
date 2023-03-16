@@ -28,9 +28,9 @@
     <!-- navbar -->
     <nav class = "navbar navbar-expand-lg navbar-light bg-white py-4 fixed-top">
         <div class = "container">
-            <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "index.html">
+            <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "land-page.php">
                 <i class="fa fa-book" aria-hidden="true"></i>
-                <span class = "text-uppercase fw-lighter ms-2">TooRead</span>
+                <span class = "text-uppercase fw-lighter ms-2">The Reading Room</span>
             </a>
 
             <div class = "order-lg-2 nav-btns">

@@ -76,9 +76,9 @@ if (isset($_SESSION['id'])) {
                         ?>
     <nav class = "navbar navbar-expand-lg navbar-light bg-white py-4 fixed-top">
         <div class = "container">
-            <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "index.html">
+        <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "land-page.php">
                 <i class="fa fa-book" aria-hidden="true"></i>
-                <span class = "text-uppercase fw-lighter ms-2">TooRead</span>
+                <span class = "text-uppercase fw-lighter ms-2">The Reading Room</span>
             </a>
 
             <div class = "order-lg-2 nav-btns">
@@ -156,6 +156,7 @@ if (isset($_SESSION['id'])) {
                     <button type = "button" class = "btn m-2 text-dark" data-filter = ".mémoire de recherche">mémoire de recherche</button>
                     <button type = "button" class = "btn m-2 text-dark" data-filter = ".magazine">magazine</button>
                 </div>
+                <input id="search-input" class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
                 <div class = "collection-list mt-4 row gx-0 gy-3">
                 <?php
                     // Connect to database using PDO
@@ -178,13 +179,13 @@ if (isset($_SESSION['id'])) {
                         $imgSrc = 'data:' . $imgType . ';base64,' . base64_encode($imgData);
                         ?>
                                                 
-                            <div class="col-md-6 col-lg-4 col-xl-3 p-2 <?php echo $row['ouvre_type']; ?>">
+                            <div class="col-md-6 col-lg-4 col-xl-3 p-2 <?php echo $row['ouvre_type']; ?> cardss">
                             <div class="collection-img position-relative">
                                 <img src="<?php echo $imgSrc; ?>" class="w-100">
                                 <span class="position-absolute bg-primary text-white d-flex align-items-center justify-content-center"><?php echo $row['ouvre_etat']; ?></span>
                             </div>
                             <div class="text-center m-2">
-                                <p class="text-capitalize my-1"><?php echo $row['ouvre_titre']; ?></p>
+                                <p class="text-capitalize my-1 card-title"><?php echo $row['ouvre_titre']; ?></p>
                                 <span class="fw-bold"><?php echo $row['ouvre_auteur']; ?></span>
                                 <div class="text-center">
                                 <a class="btn btn-primary mt-3 reserve-btn" data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-title="<?php echo $row['ouvre_id']; ?>">Reserve</a>
@@ -276,6 +277,8 @@ if (isset($_SESSION['id'])) {
       <div class="modal-body">
       <div class="text-center">
       <canvas id="qr-code" style="width: 200px; height: 200px;"></canvas>
+      <h3>Your Ticket code Is:</h3>
+      <span id="ticket-code"></span>
       </div>
       </div>
       <div class="modal-footer">
@@ -321,6 +324,9 @@ $(document).ready(function() {
       foregroundAlpha: 1,
       level: 'H'
     });
+
+     // Set the text content of #ticket-code to display the ticket code
+     document.querySelector('#ticket-code').textContent = ticket_code;
     
     $('#res-success').modal('show');
     $('#res-success').on('hidden.bs.modal', function () {
@@ -378,6 +384,23 @@ modal.addEventListener('show.bs.modal', function (event) {
   pagesElement.textContent = pages;
 });
 
+const searchInput = document.querySelector('#search-input');
+const cards = document.querySelectorAll('.cardss');
+
+searchInput.addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    cards.forEach(card => {
+        const titleElement = card.querySelector('.card-title');
+        const titleText = titleElement.textContent.toLowerCase();
+        if (titleText.includes(searchTerm)) {
+          card.style.opacity = '1';
+          card.style.maxHeight = '1000px';
+        } else {
+          card.style.opacity = '0';
+          card.style.maxHeight = '0';
+        }
+    });
+});
 </script>
     </section>
     <!-- end of collection -->
