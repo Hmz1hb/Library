@@ -39,12 +39,12 @@
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-6 d-none d-xl-block">
-                <img src="./images/pexels-ivo-rainha-1261180.jpg" alt="Sample photo" class="img-fluid" style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                <img src="./images/pexels-tima-miroshnichenko-9572546.jpg" alt="Sample photo" class="img-fluid" style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
               </div>
               <div class="col-xl-6">
                 <div class="card-body p-md-5 text-black mt-5">
                   <a href="../Page Visiteure/Guest.php" class="navbar-brand d-flex align-items-center">
-                    <!-- <img src="./Img/boul-removebg-preview.png" alt="" srcset="" width="30%" class="position-relative top-0 start-50 translate-middle pt-5"> -->
+                  <img src="./images/Screenshot (8).png" alt="" srcset="" width="100%" class="position-relative top-0 start-50 translate-middle pt-5">
                   </a>
                   <h3 class="mb-5 text-center">Log In</h3>
 
@@ -64,7 +64,7 @@
 
 
                   <div class="text-center mt-3 small">
-                    Don't have an account? <a href="./signup.php">Sign Up</a>
+                    Don't have an account? <a href="./admin-signup.php">Sign Up</a>
                   </div>
                 </div>
               </div>

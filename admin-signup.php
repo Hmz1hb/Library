@@ -33,19 +33,19 @@ ob_start()
 </head>
 
 <body>
-  <form class="h-100" method="POST" action="signup.php">
+  <form class="h-100" method="POST" action="./admin-signup.php">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-6 d-none d-xl-block">
-                <img src="./images/pexels-ricardo-esquivel-1926988.jpg" alt="Sample photo" class="img-fluid" style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                <img src="./images/pexels-tima-miroshnichenko-6549640.jpg" alt="Sample photo" class="img-fluid" style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
               </div>
               <div class="col-xl-6">
                 <div class="card-body p-md-5 text-black">
                   <a href="../Page Visiteure/Guest.php" class="navbar-brand d-flex align-items-center mt-5">
-                    <img src="./images/Screenshot (8).png" alt="" srcset="" width="100%" class="position-relative top-0 start-50 translate-middle pt-5">
+                  <img src="./images/Screenshot (8).png" alt="" srcset="" width="100%" class="position-relative top-0 start-50 translate-middle pt-5">
                   </a>
                   <h3 class="mb-5 text-center">Sign Up Now!</h3>
 
@@ -67,8 +67,8 @@ ob_start()
                   <div class="row">
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input name="Birthdate_Inp" type="date" id="Birthdate_Inp" class="form-control form-control-lg" required />
-                        <label class="form-label" for="Birthdate_Inp"><i class="fa fa-birthday-cake" aria-hidden="true"></i> Birthday</label>
+                      <input name="Email_Inp" type="email" id="Email_Inp" class="form-control form-control-lg" required />
+                        <label class="form-label" for="Email_Inp">Email</label>
                       </div>
                     </div>
                     <div class="col-md-6 mb-4">
@@ -78,23 +78,6 @@ ob_start()
                       </div>
                     </div>
                   </div>
-
-                  <div class="form-outline mb-4">
-                  <input name="Username_Inp" type="text" id="Username_Inp" class="form-control form-control-lg" required />
-                        <label class="form-label" for="Username_Inp">User Name</label>
-                  </div>
-
-                  
-                  <div class="form-outline mb-4">
-                    <input name="Address_Inp" type="text" id="Address_Inp" class="form-control form-control-lg" required />
-                    <label class="form-label" for="Address_Inp">Address</label>
-                  </div>
-
-                  <div class="form-outline mb-4">
-                  <input name="Email_Inp" type="email" id="Email_Inp" class="form-control form-control-lg" required />
-                        <label class="form-label" for="Email_Inp">Email</label>
-                  </div>
-
                   <div class="form-outline mb-4">
                     <input name="Password_Inp" type="password" id="Password_Inp" class="form-control form-control-lg" required />
                     <label class="form-label" for="Password_Inp">Password</label>
@@ -105,27 +88,11 @@ ob_start()
                     <label class="form-label" for="Password_Confirm_Inp">Password Verification</label>
                   </div>
 
-                  <div class="form-outline mb-4">
-                  <div class="col-md-6 mb-4">
-                      <div class="form-outline">
-                        <select name="Type_Inp" id="Type_Inp" class="form-control form-control-lg" required>
-                        <option value="#"></option>
-                          <option value="Etudiant">Etudiant</option>
-                          <option value="Fonctionnaire">Fonctionnaire</option>
-                          <option value="Employé">Employé</option>
-                          <option value="Femme">Femme</option>
-                          <option value="Foyer">Foyer</option>
-                          </select>
-                        <label class="form-label" for="Type_Inp">Type</label>
-                      </div>
-                    </div>
-                  </div>
-
                   <div class="d-flex justify-content-end pt-3">
                     <button type="submit" name="submit" class="btn btn-danger btn-block">Sign Up</button>
                   </div>
                   <div class="text-center mt-3 small">
-                    Already have an account? <a href="./Log-in.php">Sign In</a>
+                    Already have an account? <a href="./admin-log-in.php">Sign In</a>
                   </div>
                 </div>
               </div>
@@ -155,13 +122,9 @@ ob_start()
    
      // Get form data
      $name = test_input($_POST['Name_Inp']);
-     $address = test_input($_POST['Address_Inp']);
      $email = test_input($_POST['Email_Inp']);
      $phone = test_input($_POST['Phone_Inp']);
      $cin = test_input($_POST['CIN_Inp']);
-     $birthdate = test_input($_POST['Birthdate_Inp']);
-     $type = test_input($_POST['Type_Inp']);
-     $username = test_input($_POST['Username_Inp']);
      $password = test_input($_POST['Password_Inp']);
      $password_confirm = test_input($_POST['Password_Confirm_Inp']);
    
@@ -172,13 +135,13 @@ ob_start()
      $passHash = password_hash($password, PASSWORD_DEFAULT);
    
      // Prepare and execute SQL query
-     $stmt = $conn->prepare("INSERT INTO `adhérent` (A_nom, A_adresse, A_email, A_phone, A_CIN, A_dateN, A_type, A_userName, A_pass, A_creation, A_pénalités) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 0)");
-     $stmt->execute([$name, $address, $email, $phone, $cin, $birthdate,$type,$username,$passHash]);
+     $stmt = $conn->prepare("INSERT INTO `bibliothécaire` (bib_nom, bib_email, bib_tele, bib_CIN, bib_pass) VALUES (?, ?, ?, ?, ?)");
+     $stmt->execute([$name, $email, $phone, $cin, $passHash]);
    
      // Check if the query was successful
      if ($stmt->rowCount() > 0) {
          // Redirect to login page
-         header("Location: http://localhost/Library/Log-in.php");
+         header("Location:http://localhost/Library/admin-log-in.php");
          exit(); // Terminate the script
      } else {
          exit(); // Terminate the script
