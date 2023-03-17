@@ -167,16 +167,23 @@ if (isset($_SESSION['id'])) {
                     $conn = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
 
                     // Fetch image data from database
-                    $sql = "SELECT MIN(ouvre_id) AS ouvre_id, ouvre_titre, ouvre_auteur, ouvre_img, ouvre_etat, ouvre_type, ouvre_editionD, ouvre_achatD, ouvre_pages 
-                    FROM ouvrage 
-                    GROUP BY ouvre_titre";            
-                    $result = $conn->query($sql);
+$sql = "SELECT MIN(ouvrage.ouvre_id) AS ouvre_id, ouvrage.ouvre_titre, ouvrage.ouvre_auteur, ouvrage.ouvre_img, ouvrage.ouvre_etat, ouvrage.ouvre_type, ouvrage.ouvre_editionD, ouvrage.ouvre_achatD, ouvrage.ouvre_pages 
+FROM ouvrage 
+WHERE ouvrage.ouvre_etat <> 'Déchiré' 
+AND ouvrage.ouvre_id NOT IN (
+    SELECT emprunt.ouvre_id FROM emprunt 
+    UNION 
+    SELECT réservation.ouvre_id FROM réservation
+) 
+GROUP BY ouvrage.ouvre_titre";            
 
-                    // Loop through each image and display it on the webpage
-                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        $imgData = $row['ouvre_img'];
-                        $imgType = finfo_buffer(finfo_open(), $imgData, FILEINFO_MIME_TYPE);
-                        $imgSrc = 'data:' . $imgType . ';base64,' . base64_encode($imgData);
+$result = $conn->query($sql);
+
+// Loop through each image and display it on the webpage
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $imgData = $row['ouvre_img'];
+    $imgType = finfo_buffer(finfo_open(), $imgData, FILEINFO_MIME_TYPE);
+    $imgSrc = 'data:' . $imgType . ';base64,' . base64_encode($imgData);
                         ?>
                                                 
                             <div class="col-md-6 col-lg-4 col-xl-3 p-2 <?php echo $row['ouvre_type']; ?> cardss">
