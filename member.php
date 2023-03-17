@@ -13,6 +13,13 @@
 
     <!-- custom css -->
     <link rel="stylesheet" href="./css/main.css?v=<?php echo time(); ?>">
+    <style>
+      .collection-img img {
+    height: 500px;
+    width: 400px;
+    object-fit: fill;
+}
+    </style>
 </head>
 <?php    
 session_start();
@@ -356,9 +363,6 @@ $(document).ready(function() {
 
 });
 
-
-
-  // get modal and its elements
 // get modal and its elements
 var modal = document.getElementById('exampleModal');
 var titleElement = modal.querySelector('.modal-title');

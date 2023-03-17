@@ -44,7 +44,7 @@ ob_start()
               </div>
               <div class="col-xl-6">
                 <div class="card-body p-md-5 text-black">
-                  <a href="../Page Visiteure/Guest.php" class="navbar-brand d-flex align-items-center mt-5">
+                  <a href="./land-page.php" class="navbar-brand d-flex align-items-center mt-5">
                     <img src="./images/Screenshot (8).png" alt="" srcset="" width="100%" class="position-relative top-0 start-50 translate-middle pt-5">
                   </a>
                   <h3 class="mb-5 text-center">Sign Up Now!</h3>

@@ -172,8 +172,7 @@ if (isset($_SESSION['id'])) {
 <section id = "collection">
 <div class="container-fluid mt-5">
   <div class="row">
-
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <main class="col-md-12 ms-sm-auto col-lg-10">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">My Borrows</h1>
       </div>
@@ -288,7 +287,7 @@ if (isset($_SESSION['id'])) {
 </div>
 
 <!-- E-ticket Modal -->
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -299,9 +298,32 @@ if (isset($_SESSION['id'])) {
                 <div class="text-center">
                     <canvas id="qr-code" class="mb-3"></canvas>
                 </div>
+                <h3>Your Ticket code Is:</h3>
+                 <span id="ticket-code"></span>
             </div>
         </div>
     </div>
+</div> -->
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel3">E-ticket for <span class="book-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="text-center">
+      <canvas id="qr-code" style="width: 200px; height: 200px;"></canvas>
+      <h3>Your Ticket code Is:</h3>
+      <span id="ticket-code"></span>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -336,6 +358,7 @@ $(document).ready(function() {
                     value: response.ticket_code.toString(),
                     size: 200
                 });
+                
             } else {
                 alert('Failed to fetch ticket code.');
             }
